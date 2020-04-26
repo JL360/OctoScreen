@@ -103,4 +103,3 @@ func (m *movePanel) createHomeButton() gtk.IWidget {
 		})
 	
 	}
-}
