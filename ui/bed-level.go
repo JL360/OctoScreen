@@ -39,6 +39,10 @@ func (m *bedLevelPanel) initialize() {
 	if m.UI.Settings != nil && m.UI.Settings.GCodes.AutoBedLevel != "" {
 		m.Grid().Attach(m.createAutoLevelButton(m.UI.Settings.GCodes.AutoBedLevel), 4, 0, 1, 1)
 	}
+
+	m.Grid().Attach(m.createLevelZButton("Level Z"), 1, 0, 1, 1)
+
+	
 }
 
 func (m *bedLevelPanel) defineLevelingPoints() {
@@ -120,4 +124,21 @@ func (m *bedLevelPanel) createAutoLevelButton(gcode string) *gtk.Button {
 		}
 	})
 	return b
+}
+
+func (m *movePanel) createLevelZButton() gtk.IWidget {
+	return MustButtonImage("Level Z Axis", "bed-level.svg", func() {
+		cmd := &octoprint.CommandRequest{}
+		cmd.Commands = []string{
+			"G34",
+		}
+
+		Logger.Info("Leveling Z axis")
+		if err := cmd.Do(m.UI.Printer); err != nil {
+			Logger.Error(err)
+			return
+		}
+	})
+
+}
 }
