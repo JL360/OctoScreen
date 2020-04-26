@@ -45,6 +45,9 @@ func (m *movePanel) initialize() {
 	m.Grid().Attach(m.step, 3, 2, 1, 1)
 
 	m.Grid().Attach(m.createHomeButton(), 1, 2, 1, 1)
+
+	m.Grid().Attach(m.createLevelZButton(), 1, 0, 1, 1)
+
 }
 
 func (m *movePanel) createMoveButton(label, image string, a octoprint.Axis, dir float64) gtk.IWidget {
@@ -77,11 +80,27 @@ func (m *movePanel) createHomeButton() gtk.IWidget {
 			"G28",
 		}
 
-		Logger.Info("Sending filament unload request")
+		Logger.Info("Homing all axis")
 		if err := cmd.Do(m.UI.Printer); err != nil {
 			Logger.Error(err)
 			return
 		}
 	})
 
+
+	func (m *movePanel) createLevelZButton() gtk.IWidget {
+		return MustButtonImage("Level Z Axis", "bed-level.svg", func() {
+			cmd := &octoprint.CommandRequest{}
+			cmd.Commands = []string{
+				"G34",
+			}
+	
+			Logger.Info("Leveling Z axis")
+			if err := cmd.Do(m.UI.Printer); err != nil {
+				Logger.Error(err)
+				return
+			}
+		})
+	
+	}
 }
