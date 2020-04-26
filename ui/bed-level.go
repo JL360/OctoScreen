@@ -141,4 +141,3 @@ func (m *movePanel) createLevelZButton() gtk.IWidget {
 	})
 
 }
-}
